@@ -1,47 +1,43 @@
-# Evaluación y Mejora Continua del Pipeline DevOps (Actividad 3.6)
+# Examen Final Transversal: Automatización y Orquestación de Plataforma Multicapa en AWS (EKS)
 
-Este proyecto implementa y valida un pipeline optimizado en **GitHub Actions** para el despliegue automático en **Amazon EKS**.
-
-Se enfoca en la **paralelización de compilaciones** y el desacoplamiento de etapas para acelerar la entrega de software, siguiendo los principios de la mejora continua de DevOps.
+Este repositorio contiene el proyecto práctico final de la asignatura **Introducción a Herramientas DevOps (ISY1101)**. Consiste en la contenedorización, automatización de la integración y entrega continua (CI/CD) y la orquestación productiva de la plataforma **"Tienda de Perros"** para la empresa Innovatech Chile.
 
 ---
 
-## 📈 Mejoras Aplicadas en esta Versión
+## 📋 Arquitectura General del Sistema
 
-1.  **Compilaciones en Paralelo (Jobs Concurrentes):** 
-    Reescribimos el workflow [.github/workflows/deploy-eks.yml](.github/workflows/deploy-eks.yml) dividiéndolo en dos Jobs:
-    *   `build-and-push`: Utiliza una matriz de estrategia para construir y subir las tres imágenes (`tienda-db`, `tienda-backend`, `tienda-frontend`) **en paralelo en 3 runners independientes**.
-    *   `deploy-to-eks`: Realiza la descarga y actualización de las imágenes en el clúster de EKS únicamente después de que el Job de compilación finaliza de forma exitosa (`needs: build-and-push`).
-2.  **Eliminación del Bug de Red en EKS:** 
-    Se removió la anotación conflictiva `service.beta.kubernetes.io/aws-load-balancer-type: "external"` en el frontend para asegurar la provisión nativa del Classic Load Balancer.
+La solución está diseñada bajo una arquitectura desacoplada de tres capas ejecutándose en contenedores independientes y orquestados:
 
----
-
-## 🚀 Cómo Ejecutar la Validación
-
-1.  Asegúrate de estar en la carpeta de la sesión 3.6 en tu terminal local.
-2.  Ejecuta estos comandos para inicializar Git y subir el código al mismo repositorio `tienda-perritos-eks`:
-    ```bash
-    # 1. Navegar a la carpeta del proyecto 3.6
-    cd "C:\Users\skate\Desktop\USIL\DUOC UC\CURSOS\INTRODUCCION  A HERRAMIENTAS DEVOPS\SESION_03\3.6\3.6.3 APP tienda-perritos-EKS_GITHUB (1)"
-
-    # 2. Inicializar Git y realizar el commit
-    git init
-    git add .
-    git commit -m "feat: optimización de pipeline con compilaciones en paralelo"
-
-    # 3. Renombrar la rama a main
-    git branch -M main
-
-    # 4. Vincular al mismo repositorio de GitHub (Reemplaza con tu URL de GitHub)
-    git remote add origin https://github.com/afergit/tienda-perritos-eks.git
-
-    # 5. Sobrescribir y subir el código para disparar el pipeline optimizado
-    git push -f -u origin main
-    ```
-3.  Entra a la pestaña **Actions** en tu repositorio en GitHub y observa el nuevo diseño visual del pipeline: verás que el primer paso se divide en tres flujos paralelos y luego pasa a la etapa de despliegue.
+1.  **Capa de Presentación (Frontend):** Interfaz web estática optimizada servida a través de un servidor Nginx minimalista (Puerto 80).
+2.  **Capa Lógica (Backend API):** Servicio REST desarrollado en Node.js con Express que provee los endpoints de negocio (Puerto 3001).
+3.  **Capa de Persistencia (Base de Datos):** Motor de base de datos relacional MySQL (Puerto 3306) con inicialización automática de esquema y semillas.
 
 ---
 
-## 📝 Reporte de Mejora Continua
-Puedes consultar el análisis técnico detallado, los tiempos de ejecución y las métricas en el archivo [reporte_mejora_continua.md](reporte_mejora_continua.md).
+## 🛠️ Contenedorización y Desarrollo Local
+
+### Buenas Prácticas de Contenedores:
+*   **Dockerfile Multietapa (Multi-Stage):** Implementado en el Frontend para separar la etapa de compilación de la etapa de ejecución, reduciendo el peso de la imagen final a solo ~30MB y aislando dependencias de desarrollo.
+*   **Imágenes base minimalistas:** Uso de imágenes `alpine` y `slim` para endurecimiento de contenedores (reducción de vulnerabilidades y optimización de descargas).
+*   **Archivos `.dockerignore`:** Configurados en cada microservicio para omitir del contexto carpetas innecesarias como `node_modules` y `.git`.
+*   **Desarrollo Local:** Orquestado de forma automática mediante **`docker-compose.yml`** en la raíz del proyecto para emular el entorno completo localmente en una red aislada.
+
+---
+
+## 🚀 Pipeline de CI/CD (GitHub Actions)
+
+El despliegue está automatizado de forma completa mediante GitHub Actions ([.github/workflows/deploy-eks.yml](.github/workflows/deploy-eks.yml)):
+
+*   **Compilación Paralela (Matrix Strategy):** Las tareas de build y push para `frontend`, `backend` y `db` se ejecutan simultáneamente en 3 runners independientes, acelerando la integración en un **48%**.
+*   **Versionado y Trazabilidad:** Las imágenes se publican de forma segura en **Amazon ECR** etiquetadas de forma dinámica con el **Git SHA corto** del commit de origen.
+*   **Manejo de Secretos:** Configuración cifrada de credenciales de AWS Academy en los Repository Secrets de GitHub bajo el principio de mínimo privilegio.
+
+---
+
+## ☁️ Infraestructura Productiva en AWS EKS
+
+La plataforma corre en producción sobre un clúster de **Amazon EKS (Kubernetes)**:
+*   **Networking:** Despliegue sobre una VPC personalizada con alta disponibilidad física distribuida en dos Zonas de Disponibilidad (`us-east-1a` y `us-east-1b`) y subredes etiquetadas para EKS.
+*   **Cómputo FinOps:** Grupo de Nodos trabajadores (`tienda-nodes`) utilizando instancias de tipo **Spot** (`t3.medium`) con autoescalado elástico.
+*   **Orquestación y Elasticidad (HPA):** Autoescalado automático configurado mediante Horizontal Pod Autoscaler al superar el 70% de CPU en el backend.
+*   **Resiliencia (Auto-Healing):** Monitoreo constante del estado de los contenedores mediante sondas de salud que activan reinicios automáticos en caso de fallas de proceso.

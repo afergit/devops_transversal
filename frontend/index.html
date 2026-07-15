@@ -2,126 +2,221 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Tienda de Alimentos para Perritos &#128054;</title>
+  <title>Tienda de Alimentos para Mascotas &#128054;</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
+    * {
+      box-sizing: border-box;
+    }
     body {
-      font-family: Arial, sans-serif;
+      font-family: 'Inter', sans-serif;
       margin: 0;
       padding: 0;
-      background: #f5f5f5;
+      background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+      color: #f1f5f9;
+      min-height: 100vh;
     }
     header {
-      background: #3b82f6;
-      color: white;
-      padding: 16px;
+      background: rgba(30, 41, 59, 0.4);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 24px 16px;
       text-align: center;
     }
-    main {
-      max-width: 1000px;
-      margin: 20px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    header h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin: 0 0 8px 0;
+      background: linear-gradient(to right, #38bdf8, #818cf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    h1, h2 {
+    header p {
+      color: #94a3b8;
+      margin: 0;
+      font-size: 0.95rem;
+    }
+    main {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px 40px 20px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 30px;
+    }
+    @media (min-width: 768px) {
+      main {
+        grid-template-columns: 2fr 1fr;
+      }
+    }
+    section {
+      background: rgba(30, 41, 59, 0.6);
+      backdrop-filter: blur(12px);
+      padding: 30px;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+    }
+    h2 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      color: #f8fafc;
       margin-top: 0;
+      margin-bottom: 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      padding-bottom: 10px;
     }
     .actions {
-      margin-bottom: 16px;
+      margin-bottom: 20px;
     }
     button {
-      padding: 8px 16px;
+      padding: 10px 20px;
       margin-right: 8px;
       border: none;
-      border-radius: 4px;
+      border-radius: 8px;
       cursor: pointer;
-      background: #3b82f6;
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 0.85rem;
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
       color: white;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.2);
+    }
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 12px -1px rgba(59, 130, 246, 0.3);
+      opacity: 0.95;
     }
     button.secondary {
-      background: #6b7280;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      box-shadow: none;
+    }
+    button.secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
     }
     button.danger {
-      background: #ef4444;
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+    }
+    button.danger:hover {
+      box-shadow: 0 6px 12px -1px rgba(239, 68, 68, 0.3);
+    }
+    .table-responsive {
+      overflow-x: auto;
+      width: 100%;
     }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 16px;
+      font-size: 0.9rem;
     }
     th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
+      padding: 14px 16px;
       text-align: left;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }
     th {
-      background: #e5e7eb;
+      background: rgba(15, 23, 42, 0.4);
+      color: #94a3b8;
+      font-weight: 500;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
     }
-    tr:nth-child(even) {
-      background: #f9fafb;
+    td {
+      color: #e2e8f0;
+    }
+    tr:hover td {
+      background: rgba(255, 255, 255, 0.02);
     }
     .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 10px;
-      margin-top: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
     }
     label {
       display: block;
-      font-weight: bold;
-      margin-bottom: 4px;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: #94a3b8;
+      font-size: 0.8rem;
     }
     input, textarea {
       width: 100%;
-      padding: 6px;
-      border-radius: 4px;
-      border: 1px solid #d1d5db;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(15, 23, 42, 0.3);
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
       box-sizing: border-box;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus, textarea:focus {
+      outline: none;
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
     }
     .status {
-      margin-top: 10px;
-      font-size: 0.9rem;
+      margin-top: 15px;
+      font-size: 0.85rem;
+      padding: 10px 12px;
+      border-radius: 8px;
+      font-weight: 500;
+      display: none;
     }
     .status.ok {
-      color: #16a34a;
+      display: block;
+      background: rgba(22, 163, 74, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(22, 163, 74, 0.2);
     }
     .status.error {
-      color: #dc2626;
+      display: block;
+      background: rgba(220, 38, 38, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(220, 38, 38, 0.2);
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Tienda de Alimentos para Perritos &#128054;</h1>
-    <p>Gestión CRUD de productos en contenedores Docker (Frontend + Backend + MySQL)</p>
+    <h1>Tienda de Alimentos para Mascotas &#128054;</h1>
+    <p>Gestión Cloud de inventario orquestado en producción con AWS EKS</p>
   </header>
   <main>
     <section>
-      <h2>Productos</h2>
+      <h2>Inventario de Productos</h2>
       <div class="actions">
-        <button id="btnCargar">Cargar Productos</button>
+        <button id="btnCargar">Actualizar Tabla</button>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Descripción</th>
-            <th>Precio</th>
-            <th>Stock</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
-        <tbody id="tbodyProductos">
-          <!-- Aqu�� se insertan filas dinamicamente -->
-        </tbody>
-      </table>
+      <div class="table-responsive">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <th>Descripción</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyProductos">
+            <!-- Filas dinámicas -->
+          </tbody>
+        </table>
+      </div>
     </section>
 
     <section>
-      <h2 id="formTitle">Nuevo producto</h2>
+      <h2 id="formTitle">Nuevo Producto</h2>
       <div class="form-grid">
         <div>
           <label for="nombre">Nombre</label>
@@ -129,18 +224,18 @@
         </div>
         <div>
           <label for="descripcion">Descripción</label>
-          <textarea id="descripcion" rows="2" placeholder="Ej: Sabor pollo, razas pequeñas"></textarea>
+          <textarea id="descripcion" rows="3" placeholder="Ej: Sabor pollo, razas pequeñas"></textarea>
         </div>
         <div>
-          <label for="precio">Precio</label>
+          <label for="precio">Precio ($)</label>
           <input type="number" id="precio" step="0.01" min="0" placeholder="Ej: 19990" />
         </div>
         <div>
-          <label for="stock">Stock</label>
+          <label for="stock">Cantidad en Stock</label>
           <input type="number" id="stock" min="0" placeholder="Ej: 10" />
         </div>
       </div>
-      <div class="actions" style="margin-top: 12px;">
+      <div class="actions" style="margin-top: 20px;">
         <button id="btnGuardar">Guardar</button>
         <button id="btnCancelar" class="secondary">Cancelar</button>
       </div>
